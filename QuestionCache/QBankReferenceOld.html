@@ -1,0 +1,571 @@
+
+<h2 class="sr-only">AP Physics 2 question bank — add questions, browse cards, and track coverage by unit and science practice.</h2>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.app { display: flex; flex-direction: column; gap: 0; }
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px 10px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+.topbar-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.topbar-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
+.nav-tabs { display: flex; gap: 4px; }
+.nav-tab {
+  padding: 6px 14px; font-size: 13px; border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary); cursor: pointer;
+  background: transparent; color: var(--color-text-secondary);
+  transition: background 0.1s;
+}
+.nav-tab.active {
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary); font-weight: 500;
+  border-color: var(--color-border-primary);
+}
+
+.view { padding: 16px; }
+
+/* ── SKILL BADGES ── */
+.skill-badge {
+  display: inline-block; font-size: 11px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);
+}
+.sk-2A { background: #E6F1FB; color: #0C447C; }
+.sk-2B { background: #E1F5EE; color: #085041; }
+.sk-2C { background: #EEEDFE; color: #3C3489; }
+.sk-2D { background: #FCEBEB; color: #791F1F; }
+.sk-3B { background: #FAEEDA; color: #633806; }
+.sk-3C { background: #E6F1FB; color: #042C53; }
+
+.unit-badge {
+  display: inline-block; font-size: 11px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+}
+
+/* ── FORM VIEW ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-full { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+.field input, .field select, .field textarea {
+  font-family: var(--font-sans); font-size: 13px;
+  border-radius: var(--border-radius-md);
+}
+.field textarea { resize: vertical; min-height: 60px; }
+.choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.choice-row { display: flex; align-items: center; gap: 6px; }
+.choice-letter {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+.choice-row input { flex: 1; }
+.correct-select { display: flex; gap: 6px; }
+.correct-btn {
+  width: 36px; height: 32px; border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent; cursor: pointer; font-size: 13px; font-weight: 500;
+  color: var(--color-text-secondary);
+}
+.correct-btn.sel {
+  background: #E1F5EE; color: #085041;
+  border-color: #5DCAA5;
+}
+.form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+.btn-primary {
+  padding: 8px 18px; border-radius: var(--border-radius-md); font-size: 13px;
+  font-weight: 500; border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-text-primary); color: var(--color-background-primary);
+  cursor: pointer;
+}
+.btn-secondary {
+  padding: 8px 14px; border-radius: var(--border-radius-md); font-size: 13px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent; color: var(--color-text-secondary); cursor: pointer;
+}
+.save-status {
+  font-size: 12px; color: var(--color-text-secondary);
+  align-self: center; margin-right: auto;
+}
+
+/* ── BANK VIEW ── */
+.filter-bar {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center;
+}
+.filter-bar select, .filter-bar input { font-size: 12px; padding: 5px 8px; }
+.filter-bar input { border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); flex: 1; min-width: 140px; }
+.count-label { font-size: 12px; color: var(--color-text-secondary); margin-left: auto; }
+
+.q-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.1s;
+}
+.q-card:hover { border-color: var(--color-border-primary); }
+.q-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.q-card-meta { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.q-stem { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; margin-bottom: 8px; font-style: italic; }
+.q-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; }
+.q-choice { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; padding: 2px 0; display: flex; gap: 5px; }
+.q-choice.correct { color: #0F6E56; font-weight: 500; }
+.q-choice-mark { flex-shrink: 0; width: 14px; }
+.q-annotation { font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 7px 10px; margin-top: 8px; line-height: 1.5; }
+.q-difficulty { font-size: 11px; color: var(--color-text-tertiary); }
+.diff-dots { display: flex; gap: 2px; }
+.diff-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-border-secondary); }
+.diff-dot.on { background: var(--color-text-secondary); }
+
+.q-actions { display: flex; gap: 6px; margin-top: 10px; }
+.btn-icon {
+  padding: 5px 8px; border-radius: var(--border-radius-md); font-size: 13px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent; color: var(--color-text-secondary); cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+.btn-icon.danger { color: var(--color-text-danger); border-color: var(--color-border-danger); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--color-text-secondary); font-size: 14px; }
+.empty-state i { font-size: 32px; display: block; margin-bottom: 10px; color: var(--color-text-tertiary); }
+
+/* ── TRACKER VIEW ── */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+
+.section-heading { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
+
+.heatmap-wrap { overflow-x: auto; margin-bottom: 20px; }
+.heatmap { border-collapse: collapse; font-size: 12px; width: 100%; }
+.heatmap th { padding: 6px 8px; font-weight: 500; color: var(--color-text-secondary); text-align: center; font-size: 11px; }
+.heatmap th.row-label { text-align: left; font-size: 12px; color: var(--color-text-primary); }
+.heatmap td { padding: 4px 6px; text-align: center; border-radius: 4px; min-width: 44px; }
+.hm-0 { background: var(--color-background-secondary); color: var(--color-text-tertiary); }
+.hm-1 { background: #E1F5EE; color: #085041; }
+.hm-2 { background: #9FE1CB; color: #085041; }
+.hm-3 { background: #5DCAA5; color: #04342C; }
+.hm-4 { background: #1D9E75; color: #E1F5EE; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.bar-row { display: flex; align-items: center; gap: 8px; }
+.bar-label { font-size: 12px; color: var(--color-text-secondary); width: 32px; text-align: right; flex-shrink: 0; font-family: var(--font-mono); }
+.bar-track { flex: 1; height: 20px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 6px; font-size: 11px; font-weight: 500; min-width: 2px; transition: width 0.3s; }
+.bar-count { font-size: 12px; color: var(--color-text-secondary); min-width: 20px; }
+
+.stimulus-bars { display: flex; flex-direction: column; gap: 6px; }
+.stim-row { display: flex; align-items: center; gap: 8px; }
+.stim-label { font-size: 12px; color: var(--color-text-secondary); width: 80px; flex-shrink: 0; }
+
+.export-row { display: flex; gap: 8px; margin-top: 4px; }
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">AP Physics 2 — Question Bank</div>
+      <div class="topbar-sub">Algebra-Based · MCQ</div>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showView('add')" id="tab-add">
+        <i class="ti ti-plus" aria-hidden="true"></i> Add question
+      </button>
+      <button class="nav-tab" onclick="showView('bank')" id="tab-bank">
+        <i class="ti ti-file" aria-hidden="true"></i> Browse
+      </button>
+      <button class="nav-tab" onclick="showView('track')" id="tab-track">
+        <i class="ti ti-chart-bar" aria-hidden="true"></i> Coverage
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ ADD VIEW ══ -->
+  <div class="view" id="view-add">
+    <div class="form-grid">
+      <div class="field">
+        <label>Unit</label>
+        <select id="f-unit">
+          <option value="">Select unit…</option>
+          <option value="9">Unit 9 — Thermodynamics</option>
+          <option value="10">Unit 10 — Electric Force, Field &amp; Potential</option>
+          <option value="11">Unit 11 — Electric Circuits</option>
+          <option value="12">Unit 12 — Magnetism &amp; Electromagnetism</option>
+          <option value="13">Unit 13 — Geometric Optics</option>
+          <option value="14">Unit 14 — Waves, Sound &amp; Physical Optics</option>
+          <option value="15">Unit 15 — Modern Physics</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Science practice sub-skill</label>
+        <select id="f-skill">
+          <option value="">Select sub-skill…</option>
+          <option value="2A">2.A — Derive symbolic expression</option>
+          <option value="2B">2.B — Calculate / estimate</option>
+          <option value="2C">2.C — Compare quantities</option>
+          <option value="2D">2.D — Predict change (functional dependence)</option>
+          <option value="3B">3.B — Apply law / model to make claim</option>
+          <option value="3C">3.C — Justify with evidence</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Stimulus type</label>
+        <select id="f-stimulus">
+          <option value="None">None (text only)</option>
+          <option value="Diagram">Diagram / schematic</option>
+          <option value="Graph">Graph</option>
+          <option value="Data table">Data table</option>
+          <option value="Two-student scenario">Two-student scenario</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Difficulty</label>
+        <select id="f-difficulty">
+          <option value="1">1 — Single step</option>
+          <option value="2">2 — Multi step</option>
+          <option value="3">3 — Multi concept</option>
+        </select>
+      </div>
+      <div class="field form-full">
+        <label>Question stem</label>
+        <textarea id="f-stem" placeholder="Write the question stem here…" style="min-height:72px;"></textarea>
+      </div>
+      <div class="field form-full">
+        <label>Answer choices</label>
+        <div class="choices-grid">
+          <div class="choice-row"><div class="choice-letter">A</div><input id="f-A" placeholder="Choice A…" type="text"></div>
+          <div class="choice-row"><div class="choice-letter">B</div><input id="f-B" placeholder="Choice B…" type="text"></div>
+          <div class="choice-row"><div class="choice-letter">C</div><input id="f-C" placeholder="Choice C…" type="text"></div>
+          <div class="choice-row"><div class="choice-letter">D</div><input id="f-D" placeholder="Choice D…" type="text"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Correct answer</label>
+        <div class="correct-select" id="correct-btns">
+          <button class="correct-btn" onclick="selectCorrect('A')">A</button>
+          <button class="correct-btn" onclick="selectCorrect('B')">B</button>
+          <button class="correct-btn" onclick="selectCorrect('C')">C</button>
+          <button class="correct-btn" onclick="selectCorrect('D')">D</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Distractor rationale <span style="font-weight:400;color:var(--color-text-tertiary)">(optional)</span></label>
+        <textarea id="f-distractor" placeholder="Why does each wrong answer appeal to students?" style="min-height:52px;"></textarea>
+      </div>
+      <div class="field form-full">
+        <label>Notes / flags <span style="font-weight:400;color:var(--color-text-tertiary)">(optional)</span></label>
+        <input id="f-notes" type="text" placeholder="e.g. needs diagram, revisit wording, draft…">
+      </div>
+    </div>
+    <div class="form-actions">
+      <span class="save-status" id="save-status"></span>
+      <button class="btn-secondary" onclick="clearForm()">Clear</button>
+      <button class="btn-primary" onclick="saveQuestion()" id="save-btn">Save question</button>
+    </div>
+  </div>
+
+  <!-- ══ BANK VIEW ══ -->
+  <div class="view" id="view-bank" style="display:none;">
+    <div class="filter-bar">
+      <select id="fil-unit" onchange="renderBank()">
+        <option value="">All units</option>
+        <option value="9">Unit 9</option>
+        <option value="10">Unit 10</option>
+        <option value="11">Unit 11</option>
+        <option value="12">Unit 12</option>
+        <option value="13">Unit 13</option>
+        <option value="14">Unit 14</option>
+        <option value="15">Unit 15</option>
+      </select>
+      <select id="fil-skill" onchange="renderBank()">
+        <option value="">All sub-skills</option>
+        <option value="2A">2.A</option>
+        <option value="2B">2.B</option>
+        <option value="2C">2.C</option>
+        <option value="2D">2.D</option>
+        <option value="3B">3.B</option>
+        <option value="3C">3.C</option>
+      </select>
+      <select id="fil-diff" onchange="renderBank()">
+        <option value="">All difficulties</option>
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+      </select>
+      <input id="fil-search" type="text" placeholder="Search stems…" oninput="renderBank()">
+      <span class="count-label" id="bank-count"></span>
+    </div>
+    <div id="bank-list"></div>
+  </div>
+
+  <!-- ══ TRACKER VIEW ══ -->
+  <div class="view" id="view-track" style="display:none;">
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <div class="section-heading">Coverage heatmap — unit × sub-skill</div>
+    <div class="heatmap-wrap">
+      <table class="heatmap" id="heatmap"></table>
+    </div>
+
+    <div class="section-heading">Questions per sub-skill</div>
+    <div class="bar-chart" id="skill-bars"></div>
+
+    <div class="section-heading">Stimulus types used</div>
+    <div class="stimulus-bars" id="stim-bars"></div>
+
+    <div class="export-row">
+      <button class="btn-secondary" onclick="exportCSV()">
+        <i class="ti ti-download" aria-hidden="true"></i> Export CSV
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'apphys2_qbank_v1';
+let questions = [];
+let editingId = null;
+let correctAnswer = '';
+
+async function load() {
+  try {
+    const r = await window.storage.get(STORAGE_KEY);
+    if (r && r.value) questions = JSON.parse(r.value);
+  } catch(e) { questions = []; }
+}
+
+async function save() {
+  try { await window.storage.set(STORAGE_KEY, JSON.stringify(questions)); } catch(e) {}
+}
+
+function showView(v) {
+  ['add','bank','track'].forEach(id => {
+    document.getElementById('view-'+id).style.display = id===v ? '' : 'none';
+    document.getElementById('tab-'+id).classList.toggle('active', id===v);
+  });
+  if (v==='bank') renderBank();
+  if (v==='track') renderTracker();
+}
+
+function selectCorrect(l) {
+  correctAnswer = l;
+  document.querySelectorAll('.correct-btn').forEach(b => b.classList.toggle('sel', b.textContent===l));
+}
+
+function skillLabel(s) { return s.slice(0,1)+'.'+s.slice(1); }
+function unitLabel(u) {
+  const names = {9:'Thermodynamics',10:'E Field & Potential',11:'Circuits',12:'Magnetism',13:'Geometric Optics',14:'Waves & Optics',15:'Modern Physics'};
+  return 'Unit '+u+(names[u] ? ' — '+names[u] : '');
+}
+
+function clearForm() {
+  ['f-unit','f-skill','f-stimulus','f-difficulty','f-stem','f-A','f-B','f-C','f-D','f-distractor','f-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = el.tagName==='SELECT' ? '' : '';
+  });
+  correctAnswer = '';
+  editingId = null;
+  document.querySelectorAll('.correct-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('save-btn').textContent = 'Save question';
+  document.getElementById('save-status').textContent = '';
+}
+
+async function saveQuestion() {
+  const unit = document.getElementById('f-unit').value;
+  const skill = document.getElementById('f-skill').value;
+  const stem = document.getElementById('f-stem').value.trim();
+  const A = document.getElementById('f-A').value.trim();
+  const B = document.getElementById('f-B').value.trim();
+  const C = document.getElementById('f-C').value.trim();
+  const D = document.getElementById('f-D').value.trim();
+
+  if (!unit || !skill || !stem || !A || !B || !C || !D || !correctAnswer) {
+    document.getElementById('save-status').textContent = 'Please fill in all required fields and select the correct answer.';
+    return;
+  }
+
+  const q = {
+    id: editingId || Date.now().toString(),
+    unit, skill,
+    stimulus: document.getElementById('f-stimulus').value,
+    difficulty: document.getElementById('f-difficulty').value,
+    stem, A, B, C, D,
+    correct: correctAnswer,
+    distractor: document.getElementById('f-distractor').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+    date: editingId ? (questions.find(q=>q.id===editingId)||{}).date || new Date().toISOString() : new Date().toISOString()
+  };
+
+  if (editingId) {
+    const idx = questions.findIndex(q=>q.id===editingId);
+    if (idx>=0) questions[idx] = q;
+  } else {
+    questions.push(q);
+  }
+
+  await save();
+  document.getElementById('save-status').textContent = editingId ? 'Updated.' : 'Saved!';
+  setTimeout(()=>{ document.getElementById('save-status').textContent=''; }, 2000);
+  clearForm();
+}
+
+function renderBank() {
+  const fu = document.getElementById('fil-unit').value;
+  const fs = document.getElementById('fil-skill').value;
+  const fd = document.getElementById('fil-diff').value;
+  const fq = (document.getElementById('fil-search').value||'').toLowerCase();
+
+  let filtered = questions.filter(q => {
+    if (fu && q.unit !== fu) return false;
+    if (fs && q.skill !== fs) return false;
+    if (fd && q.difficulty !== fd) return false;
+    if (fq && !q.stem.toLowerCase().includes(fq)) return false;
+    return true;
+  });
+
+  document.getElementById('bank-count').textContent = filtered.length + ' of ' + questions.length + ' questions';
+
+  const list = document.getElementById('bank-list');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><i class="ti ti-file" aria-hidden="true"></i>' +
+      (questions.length ? 'No questions match your filters.' : 'No questions yet — add your first one!') + '</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(q => {
+    const skLabel = skillLabel(q.skill);
+    const dots = [1,2,3].map(i=>'<div class="diff-dot'+(i<=parseInt(q.difficulty)?' on':'')+'"></div>').join('');
+    const choices = ['A','B','C','D'].map(l => {
+      const isC = q.correct===l;
+      return `<div class="q-choice${isC?' correct':''}">
+        <span class="q-choice-mark">${isC?'✓':'◦'}</span>
+        <span>(${l}) ${q[l]}</span>
+      </div>`;
+    }).join('');
+    const distHtml = q.distractor ? `<div class="q-annotation"><strong style="color:var(--color-text-primary)">Distractor rationale:</strong> ${q.distractor}</div>` : '';
+    const notesHtml = q.notes ? `<div style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px;"><i class="ti ti-flag" aria-hidden="true" style="font-size:11px;"></i> ${q.notes}</div>` : '';
+    return `<div class="q-card" id="qc-${q.id}">
+      <div class="q-card-header">
+        <span class="unit-badge">Unit ${q.unit}</span>
+        <span class="skill-badge sk-${q.skill}">${skLabel}</span>
+        ${q.stimulus!=='None'?`<span style="font-size:11px;color:var(--color-text-tertiary);">${q.stimulus}</span>`:''}
+        <div class="q-meta" style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <div class="diff-dots" title="Difficulty ${q.difficulty}">${dots}</div>
+          <span style="font-size:11px;color:var(--color-text-tertiary);">${new Date(q.date).toLocaleDateString()}</span>
+        </div>
+      </div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="q-choices">${choices}</div>
+      ${distHtml}${notesHtml}
+      <div class="q-actions">
+        <button class="btn-icon" onclick="editQ('${q.id}')"><i class="ti ti-edit" aria-hidden="true" style="font-size:14px;"></i> Edit</button>
+        <button class="btn-icon danger" onclick="deleteQ('${q.id}')"><i class="ti ti-trash" aria-hidden="true" style="font-size:14px;"></i> Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function editQ(id) {
+  const q = questions.find(x=>x.id===id);
+  if (!q) return;
+  document.getElementById('f-unit').value = q.unit;
+  document.getElementById('f-skill').value = q.skill;
+  document.getElementById('f-stimulus').value = q.stimulus;
+  document.getElementById('f-difficulty').value = q.difficulty;
+  document.getElementById('f-stem').value = q.stem;
+  document.getElementById('f-A').value = q.A;
+  document.getElementById('f-B').value = q.B;
+  document.getElementById('f-C').value = q.C;
+  document.getElementById('f-D').value = q.D;
+  document.getElementById('f-distractor').value = q.distractor||'';
+  document.getElementById('f-notes').value = q.notes||'';
+  editingId = id;
+  selectCorrect(q.correct);
+  document.getElementById('save-btn').textContent = 'Update question';
+  showView('add');
+  window.scrollTo(0,0);
+}
+
+async function deleteQ(id) {
+  if (!confirm('Delete this question?')) return;
+  questions = questions.filter(q=>q.id!==id);
+  await save();
+  renderBank();
+}
+
+function renderTracker() {
+  const total = questions.length;
+  const skills = ['2A','2B','2C','2D','3B','3C'];
+  const units = [9,10,11,12,13,14,15];
+
+  document.getElementById('stats-grid').innerHTML = [
+    ['Total questions', total],
+    ['Units covered', new Set(questions.map(q=>q.unit)).size + ' / 7'],
+    ['Sub-skills used', new Set(questions.map(q=>q.skill)).size + ' / 6'],
+    ['This week', questions.filter(q=>{ const d=new Date(q.date); const now=new Date(); return (now-d)<7*86400000; }).length]
+  ].map(([label,value])=>`<div class="stat-card"><div class="stat-label">${label}</div><div class="stat-value">${value}</div></div>`).join('');
+
+  const hm = document.getElementById('heatmap');
+  const maxCount = Math.max(1, ...units.flatMap(u => skills.map(s => questions.filter(q=>q.unit==u&&q.skill===s).length)));
+  let html = '<tr><th class="row-label">Unit</th>'+skills.map(s=>`<th>${skillLabel(s)}</th>`).join('')+'</tr>';
+  units.forEach(u => {
+    html += `<tr><th class="row-label">U${u}</th>` + skills.map(s => {
+      const c = questions.filter(q=>q.unit==u&&q.skill===s).length;
+      const tier = c===0?0:c===1?1:c<=3?2:c<=5?3:4;
+      return `<td class="hm-${tier}">${c||'—'}</td>`;
+    }).join('') + '</tr>';
+  });
+  hm.innerHTML = html;
+
+  const maxS = Math.max(1, ...skills.map(s=>questions.filter(q=>q.skill===s).length));
+  const skillColors = {
+    '2A':'#378ADD','2B':'#1D9E75','2C':'#7F77DD','2D':'#E24B4A','3B':'#BA7517','3C':'#185FA5'
+  };
+  document.getElementById('skill-bars').innerHTML = skills.map(s => {
+    const c = questions.filter(q=>q.skill===s).length;
+    const pct = Math.round(c/maxS*100);
+    return `<div class="bar-row">
+      <div class="bar-label">${skillLabel(s)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${skillColors[s]};color:#fff;">${c>0?c:''}</div></div>
+      <div class="bar-count">${c}</div>
+    </div>`;
+  }).join('');
+
+  const stimTypes = ['None','Diagram','Graph','Data table','Two-student scenario'];
+  const maxStim = Math.max(1, ...stimTypes.map(st=>questions.filter(q=>q.stimulus===st).length));
+  document.getElementById('stim-bars').innerHTML = stimTypes.map(st => {
+    const c = questions.filter(q=>q.stimulus===st).length;
+    const pct = Math.round(c/maxStim*100);
+    return `<div class="stim-row">
+      <div class="stim-label">${st}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:var(--color-text-secondary);opacity:0.6;">${c>0?c:''}</div></div>
+      <div class="bar-count">${c}</div>
+    </div>`;
+  }).join('');
+}
+
+function exportCSV() {
+  const headers = ['id','date','unit','skill','stimulus','difficulty','stem','A','B','C','D','correct','distractor','notes'];
+  const rows = questions.map(q => headers.map(h => '"'+(String(q[h]||'').replace(/"/g,'""'))+'"').join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = 'ap_physics2_questions.csv';
+  a.click();
+}
+
+load().then(() => { });
+</script>

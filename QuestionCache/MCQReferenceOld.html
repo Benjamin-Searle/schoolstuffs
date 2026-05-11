@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AP Physics 2 — MCQ Science Practice Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@400;600&display=swap');
+
+:root {
+  --ink: #12120f;
+  --paper: #fdfcf8;
+  --surface: #f4f2ec;
+  --rule: #d8d4c8;
+  --rule-heavy: #b0aa98;
+  --muted: #6b6860;
+  --c2a: #0c5a8a; --c2a-bg: #e8f2f8;
+  --c2b: #156640; --c2b-bg: #e6f4ed;
+  --c2c: #5e3ea1; --c2c-bg: #f0ecf9;
+  --c2d: #a03020; --c2d-bg: #faeee8;
+  --c3b: #7a4c10; --c3b-bg: #faf0e0;
+  --c3c: #1e4a78; --c3c-bg: #e8eef6;
+  --warn: #7a2020; --warn-bg: #fdf0f0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  padding: 20px 24px 32px;
+}
+
+/* ── HEADER ── */
+.page-header {
+  border-bottom: 2.5px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.page-header h1 {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+.page-header .sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.page-meta {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── LEGEND ROW ── */
+.legend {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--ink);
+}
+.leg-swatch {
+  width: 9px; height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.leg-note {
+  margin-left: auto;
+  font-size: 9.5px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ── SECTION HEADERS ── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 1.5px solid var(--ink);
+  border-bottom: none;
+  background: var(--surface);
+  border-radius: 3px 3px 0 0;
+}
+.section-head .pnum {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 15px;
+  font-weight: 600;
+}
+.section-head .ptitle {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.section-head .pnote {
+  margin-left: auto;
+  font-size: 9.5px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ── TABLE SHELL ── */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid var(--ink);
+  border-radius: 0 0 3px 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  font-size: 10.5px;
+}
+.ref-table thead tr {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ref-table thead th {
+  padding: 5px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-align: left;
+  text-transform: uppercase;
+}
+.ref-table tbody tr {
+  border-bottom: 1.5px solid var(--rule-heavy);
+  vertical-align: top;
+}
+.ref-table tbody tr:last-child { border-bottom: none; }
+.ref-table td {
+  padding: 9px 9px;
+  border-right: 1px solid var(--rule);
+}
+.ref-table td:last-child { border-right: none; }
+
+/* col widths */
+.col-skill { width: 12%; }
+.col-stem  { width: 21%; }
+.col-ex    { width: 34%; }
+.col-dis   { width: 33%; }
+
+/* ── SKILL CELL ── */
+.badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  color: #fff;
+}
+.b2a { background: var(--c2a); }
+.b2b { background: var(--c2b); }
+.b2c { background: var(--c2c); }
+.b2d { background: var(--c2d); }
+.b3b { background: var(--c3b); }
+.b3c { background: var(--c3c); }
+
+.skill-wt {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 3px;
+}
+.skill-desc {
+  font-size: 10.5px;
+  font-weight: 500;
+  display: block;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+/* ── STEM CELL ── */
+.cell-label {
+  font-size: 8.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.stem-box {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  background: var(--surface);
+  border-left: 3px solid var(--rule-heavy);
+  padding: 5px 7px;
+  margin-bottom: 7px;
+  border-radius: 0 2px 2px 0;
+}
+.stem-box em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--c2a);
+  text-decoration: underline;
+  text-decoration-color: #a0c4dc;
+  text-underline-offset: 2px;
+}
+.stem-variants {
+  list-style: none;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.stem-variants li::before {
+  content: "→ ";
+  color: var(--rule-heavy);
+}
+
+/* ── EXAMPLES CELL ── */
+.example {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--rule);
+}
+.example:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.ex-label {
+  font-size: 8.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.ex-stem {
+  font-style: italic;
+  font-size: 10.5px;
+  line-height: 1.45;
+  margin-bottom: 5px;
+  color: #1a1a14;
+}
+.choices {
+  list-style: none;
+  margin-bottom: 5px;
+}
+.choices li {
+  font-size: 10px;
+  line-height: 1.4;
+  padding: 1.5px 0;
+  color: #555;
+}
+.choices li.ok {
+  color: #0e5c30;
+  font-weight: 600;
+}
+.choices li.ok::before { content: "✓ "; }
+.choices li.no {
+  color: #6b2020;
+}
+.choices li.no::before { content: "✗ "; }
+.annotation {
+  font-size: 9.8px;
+  line-height: 1.45;
+  background: var(--surface);
+  padding: 4px 6px;
+  border-radius: 2px;
+  color: #444;
+}
+.annotation strong { color: var(--ink); font-weight: 600; }
+
+/* ── DISTRACTOR CELL ── */
+.dist-label {
+  font-size: 8.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.dist-list {
+  list-style: none;
+  margin-bottom: 8px;
+}
+.dist-list li {
+  border-left: 2px solid var(--rule);
+  padding: 3px 0 3px 8px;
+  margin-bottom: 4px;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+.dist-name {
+  font-weight: 600;
+  font-size: 10px;
+  display: block;
+  margin-bottom: 1px;
+}
+.pitfall {
+  background: var(--warn-bg);
+  border: 1px solid #e8c0c0;
+  border-radius: 2px;
+  padding: 5px 7px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--warn);
+}
+.pitfall::before {
+  content: "⚠ Pitfall: ";
+  font-weight: 600;
+}
+
+/* ── FOOTER ── */
+.page-footer {
+  border-top: 2px solid var(--ink);
+  padding-top: 10px;
+  margin-top: 4px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.footer-note {
+  flex: 1;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.footer-note strong { color: var(--ink); }
+.checklist {
+  font-size: 10px;
+  line-height: 1.85;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.checklist strong {
+  font-size: 10.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+@media print {
+  body { padding: 10px 14px; }
+  .ref-table { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>AP Physics 2: Algebra-Based — MCQ Science Practice Reference</h1>
+    <div class="sub">Teacher writing guide · Science Practices 2 &amp; 3 (MCQ-testable sub-skills only)</div>
+  </div>
+  <div class="page-meta">
+    Aligned to 2024–25 Revised CED<br>
+    Clarifications applied: Oct 2025 (FRQ format) &amp; May 2026<br>
+    Practice 1 sub-skills (1.A–1.C): FRQ only, not shown here
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-swatch" style="background:var(--c2a)"></div> 2.A Derive</div>
+  <div class="leg"><div class="leg-swatch" style="background:var(--c2b)"></div> 2.B Calculate</div>
+  <div class="leg"><div class="leg-swatch" style="background:var(--c2c)"></div> 2.C Compare</div>
+  <div class="leg"><div class="leg-swatch" style="background:var(--c2d)"></div> 2.D Predict change</div>
+  <div class="leg"><div class="leg-swatch" style="background:var(--c3b)"></div> 3.B Apply claim</div>
+  <div class="leg"><div class="leg-swatch" style="background:var(--c3c)"></div> 3.C Justify w/ evidence</div>
+  <div class="leg-note">Per 2024–25 revised CED: any learning objective may be tested with any science practice</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PRACTICE 2 -->
+<div class="section-head">
+  <span class="pnum">Practice 2</span>
+  <span class="ptitle">Mathematical Routines — MCQ weight ~55–70% of Section I</span>
+  <span class="pnote">Includes 2.A, 2.B, 2.C, 2.D</span>
+</div>
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th class="col-skill">Sub-skill &amp; weight</th>
+      <th class="col-stem">Stem pattern &amp; variants</th>
+      <th class="col-ex">Annotated examples (✓ = correct, ✗ = distractor)</th>
+      <th class="col-dis">Distractor strategies &amp; writing pitfalls</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- 2.A -->
+    <tr>
+      <td>
+        <span class="badge b2a">2.A</span>
+        <span class="skill-wt">MCQ: 15–20%</span>
+        <span class="skill-desc">Derive a symbolic expression from known quantities by selecting and following a logical mathematical pathway</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">Which of the following correctly expresses <em>[unknown]</em> in terms of <em>[given variables]</em>?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>A student derives an expression for [X]. Which is correct?</li>
+          <li>Using only the quantities shown, which expression gives [X]?</li>
+          <li>Two students write different expressions for [X]. Which is valid, and why?</li>
+          <li>[Scenario + diagram]. Which of the following represents [X] in terms of [vars]?</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Electrostatics (potential energy)</div>
+          <div class="ex-stem">A point charge Q is fixed at the origin. A test charge q is placed a distance r away. Which of the following correctly expresses the electric potential energy U of the test charge in terms of Q, q, r, and Coulomb's constant k?</div>
+          <ul class="choices">
+            <li class="ok">(A) U = kQq / r</li>
+            <li class="no">(B) U = kQq / r²</li>
+            <li class="no">(C) U = kQ / r</li>
+            <li class="no">(D) U = kQqr</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (B) is the force formula F = kQq/r² — wrong quantity. (C) drops q — that's electric potential V, not energy. (D) inverts the r relationship — targets students who misremember the proportionality direction.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Ideal gas law (isothermal)</div>
+          <div class="ex-stem">A sealed container of ideal gas undergoes an isothermal compression from volume V₁ at pressure P₁ to a new pressure P₂. Which of the following correctly expresses the final volume V₂ in terms of P₁, V₁, and P₂?</div>
+          <ul class="choices">
+            <li class="no">(A) V₂ = P₂V₁ / P₁</li>
+            <li class="ok">(B) V₂ = P₁V₁ / P₂</li>
+            <li class="no">(C) V₂ = P₁P₂ / V₁</li>
+            <li class="no">(D) V₂ = V₁(P₁ + P₂)</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (A) inverts the ratio — most common algebra error. (C) wrong units entirely, good for testing dimensional awareness. (D) replaces inverse proportion with addition — fundamental Boyle's Law misconception.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">Ratio inversion</span>Swap numerator/denominator (e.g., r vs. 1/r). Extremely common and hard to spot quickly.</li>
+          <li><span class="dist-name">Wrong-but-related equation</span>Use the formula for a nearby quantity: F instead of U, V instead of U, E instead of F. Students half-recall the topic but grab the wrong expression.</li>
+          <li><span class="dist-name">Missing variable</span>Drop one variable from the correct expression. Targets students who partially recall a formula.</li>
+          <li><span class="dist-name">Wrong exponent</span>Off-by-one on a power: r instead of r², v instead of v². Very effective in Coulomb, gravity, and kinematics contexts.</li>
+          <li><span class="dist-name">Arithmetic shortcut</span>Replace multiplication with addition or subtraction of variables (e.g., P₁ + P₂ instead of P₁/P₂).</li>
+          <li><span class="dist-name">Constant confusion</span>Swap constants: k vs. G, or present 1/4πε₀ vs. k to test whether students recognize equivalence.</li>
+        </ul>
+        <div class="pitfall">At least 2 of 3 wrong answers should be dimensionally consistent with the correct answer. A dimensionally obvious distractor is too easy to eliminate.</div>
+      </td>
+    </tr>
+
+    <!-- 2.B -->
+    <tr>
+      <td>
+        <span class="badge b2b">2.B</span>
+        <span class="skill-wt">MCQ: 20–25%</span>
+        <span class="skill-desc">Calculate or estimate an unknown quantity with units from known quantities</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">A <em>[object/system]</em> has <em>[given numerical values with units]</em>. What is the <em>[unknown quantity]</em>?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>What is the approximate value of [X]? (order-of-magnitude estimate)</li>
+          <li>A student measures [givens]. Which of the following is closest to [X]?</li>
+          <li>Based on the diagram/data table, what is [X]?</li>
+          <li>What is the magnitude of [X]? (isolates magnitude from direction)</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Electric circuits (series)</div>
+          <div class="ex-stem">A 12 V battery is connected to two resistors in series: R₁ = 4 Ω and R₂ = 8 Ω. What is the current through R₂?</div>
+          <ul class="choices">
+            <li class="no">(A) 0.75 A</li>
+            <li class="no">(B) 1.5 A</li>
+            <li class="ok">(C) 1.0 A</li>
+            <li class="no">(D) 3.0 A</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (A) divides 12 V by only R₁ then halves — partial calculation. (B) uses only R₁ as the denominator. (D) uses only R₂. All three distractors reflect "use one resistor, not the sum" — the core series circuit misconception.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Double-slit interference</div>
+          <div class="ex-stem">Monochromatic light (λ = 600 nm) passes through two slits separated by d = 0.30 mm. The screen is L = 1.5 m away. What is the distance between adjacent bright fringes?</div>
+          <ul class="choices">
+            <li class="ok">(A) 3.0 × 10⁻³ m</li>
+            <li class="no">(B) 1.2 × 10⁻⁴ m</li>
+            <li class="no">(C) 3.0 × 10⁻⁶ m</li>
+            <li class="no">(D) 2.7 × 10⁻³ m</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (B) inverts the formula: d/(λL). (C) omits L from the calculation. (D) uses λ = 600 mm instead of 600 nm — unit conversion error. All four answers are close in magnitude, preventing easy estimation.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">Unit conversion error</span>Give nm instead of m, cm instead of m, μC instead of C — very common in optics and electrostatics. Use the "wrong units" value as a distractor.</li>
+          <li><span class="dist-name">Wrong formula selection</span>Apply the formula for a related quantity: power instead of current, force instead of energy, period instead of frequency.</li>
+          <li><span class="dist-name">Partial calculation</span>Stop one step short of the final answer. Rewards students who complete all steps.</li>
+          <li><span class="dist-name">Inverted ratio</span>Divide where the student should multiply, or flip numerator/denominator.</li>
+          <li><span class="dist-name">Single-component error</span>In series/parallel networks, use only one element instead of the correct combined value.</li>
+          <li><span class="dist-name">Matched magnitudes</span>Keep all four choices within one order of magnitude so estimation alone won't identify the answer.</li>
+        </ul>
+        <div class="pitfall">Don't make the correct answer the only "round" number. If the correct answer is 3.0 × 10⁻³, all three distractors should also look clean at a glance.</div>
+      </td>
+    </tr>
+
+    <!-- 2.C -->
+    <tr>
+      <td>
+        <span class="badge b2c">2.C</span>
+        <span class="skill-wt">MCQ: 10–15%</span>
+        <span class="skill-desc">Compare physical quantities between two or more scenarios, or at different times/locations in a single scenario</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">In Situation 1, <em>[setup A]</em>. In Situation 2, <em>[setup B]</em>. How does <em>[quantity]</em> in Situation 1 compare to Situation 2?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>As [variable] increases from point A to point B, what happens to [quantity]?</li>
+          <li>Rank the following [quantities] from greatest to least.</li>
+          <li>What is the ratio of [X₁] to [X₂]?</li>
+          <li>Which of the following correctly compares [X] and [Y]? (choices: X&gt;Y, X=Y, X&lt;Y, cannot be determined)</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Parallel plate capacitor (battery disconnected)</div>
+          <div class="ex-stem">A parallel-plate capacitor is charged by a battery and then disconnected. In Situation 1, the plate separation is d. In Situation 2, the plates are pulled apart to 2d. How does the electric field between the plates in Situation 1 compare to Situation 2?</div>
+          <ul class="choices">
+            <li class="ok">(A) The fields are equal in both situations.</li>
+            <li class="no">(B) The field in Situation 1 is twice as large.</li>
+            <li class="no">(C) The field in Situation 2 is twice as large.</li>
+            <li class="no">(D) Cannot be determined without knowing the charge.</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> Battery disconnected → Q is constant (not V). E = σ/ε₀ = Q/Aε₀, which is independent of d. (B) assumes V is constant — the "battery still connected" error. (C) inverts the error. (D) is a dodge — charge is implicitly fixed.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Photoelectric effect (comparing two metals)</div>
+          <div class="ex-stem">Light of frequency f strikes Metal A (work function W), ejecting electrons with maximum kinetic energy K. The same light strikes Metal B, which has work function 2W. How does the maximum kinetic energy of electrons ejected from Metal B compare to K?</div>
+          <ul class="choices">
+            <li class="no">(A) K_B = 2K</li>
+            <li class="no">(B) K_B = K</li>
+            <li class="ok">(C) K_B = K − W</li>
+            <li class="no">(D) K_B = 0 (no electrons ejected)</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> Since K = hf − W, then K_B = hf − 2W = K − W. (A) assumes KE doubles with work function — backwards. (B) ignores work function difference. (D) is tempting if students assume 2W always exceeds hf, but K could still be positive if K &gt; W.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">False cancellation</span>Make two quantities both change so students assume they cancel — but they don't cancel linearly. Works well with E&amp;M (Q and d both change).</li>
+          <li><span class="dist-name">"They're equal" trap</span>Use situations that look symmetric but differ in what's held constant. The "equal" option is either correct or the most tempting wrong answer.</li>
+          <li><span class="dist-name">Hidden constraint</span>Change what's held constant between setups — battery connected vs. disconnected, insulated vs. grounded, rigid vs. flexible container. This is the richest source of 2.C distractors.</li>
+          <li><span class="dist-name">Wrong comparison direction</span>Students identify the right relationship but flip which scenario is larger.</li>
+          <li><span class="dist-name">"Cannot be determined" option</span>Valid when a quantity is genuinely unknown, but also effective as a distractor when students over-apply uncertainty. Use sparingly.</li>
+          <li><span class="dist-name">Intensive vs. extensive confusion</span>Pressure vs. force, field vs. flux — these scale differently with size changes.</li>
+        </ul>
+        <div class="pitfall">Both setups should differ in exactly ONE variable if you want a clean comparison. Changing two things at once is valid but must be intentional, as in Ex 2 above — and the stem must make the relationship trackable.</div>
+      </td>
+    </tr>
+
+    <!-- 2.D -->
+    <tr>
+      <td>
+        <span class="badge b2d">2.D</span>
+        <span class="skill-wt">MCQ: 10–15%</span>
+        <span class="skill-desc">Predict new values or factors of change using functional dependence between variables</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">If <em>[variable]</em> is <em>[doubled / tripled / halved]</em>, by what factor does <em>[dependent quantity]</em> change?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>A student triples [X]. What happens to [Y]? (factor-of-change)</li>
+          <li>Which change to [variable] would cause [Y] to double?</li>
+          <li>The graph shows [X] vs. [Y²]. If X is increased by a factor of 4, Y becomes…</li>
+          <li>A new planet has [mass/radius] twice that of Earth. How does [g/escape speed] compare?</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Coulomb's law (two variables change)</div>
+          <div class="ex-stem">Two charges exert a force F on each other. If the distance between the charges is tripled and one charge is doubled, by what factor does the electric force change?</div>
+          <ul class="choices">
+            <li class="no">(A) Increases by a factor of 2/3</li>
+            <li class="ok">(B) Decreases by a factor of 9/2 (new force = 2F/9)</li>
+            <li class="no">(C) Decreases by a factor of 3/2</li>
+            <li class="no">(D) Increases by a factor of 6</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> F ∝ q₁q₂/r² → factor = 2/3² = 2/9. (A) forgets r is squared. (C) applies linear distance, not squared. (D) multiplies both factors instead of applying the inverse-square relationship — the most common error when two changes compound.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Thin-lens equation (functional dependence)</div>
+          <div class="ex-stem">A converging lens of focal length f forms a real image when an object is placed at distance dₒ = 2f. The object is then moved to dₒ = 4f. By what factor does the image distance dᵢ change?</div>
+          <ul class="choices">
+            <li class="no">(A) dᵢ doubles</li>
+            <li class="no">(B) dᵢ stays the same</li>
+            <li class="ok">(C) dᵢ decreases (from 2f to 4f/3)</li>
+            <li class="no">(D) No real image forms at dₒ = 4f</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> 1/dᵢ = 1/f − 1/dₒ. At dₒ=2f → dᵢ=2f; at dₒ=4f → dᵢ=4f/3. (A) assumes image moves the same direction as object — intuitive but wrong. (B) assumes thin-lens output is constant. (D) is wrong because 4f &gt; f, so real image still forms.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">Linear assumption</span>If the relationship is quadratic (F ∝ 1/r²), offer the result as if it were linear (1/r). This is the single most common 2.D error.</li>
+          <li><span class="dist-name">Same-factor trap</span>Students assume the output changes by the same factor as the input — always offer this as a distractor.</li>
+          <li><span class="dist-name">Wrong direction</span>Offer the value the quantity would take if it increased instead of decreased, and vice versa.</li>
+          <li><span class="dist-name">Single-change error</span>When two variables change, offer the result of applying only one of the changes correctly.</li>
+          <li><span class="dist-name">Square root vs. square</span>In wave speed, Coulomb's law, gravity — offer both √n and n as distractors when the correct answer is n².</li>
+          <li><span class="dist-name">Inverse direction</span>"Doubling distance halves force" (students ignore the square) — a distractor that gets the direction right but the magnitude wrong.</li>
+        </ul>
+        <div class="pitfall">Limit each stem to at most two simultaneously changing variables. More than two makes the question a calculation puzzle rather than a test of functional reasoning. One change is cleanest; two is the ceiling.</div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<!-- ═══════════════════════════════════════════════ PRACTICE 3 -->
+<div class="section-head">
+  <span class="pnum">Practice 3</span>
+  <span class="ptitle">Scientific Questioning &amp; Argumentation — MCQ weight ~25–35% of Section I</span>
+  <span class="pnote">3.A (experimental design) is FRQ only · Only 3.B and 3.C appear in MCQ</span>
+</div>
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th class="col-skill">Sub-skill &amp; weight</th>
+      <th class="col-stem">Stem pattern &amp; variants</th>
+      <th class="col-ex">Annotated examples (✓ = correct, ✗ = distractor)</th>
+      <th class="col-dis">Distractor strategies &amp; writing pitfalls</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- 3.B -->
+    <tr>
+      <td>
+        <span class="badge b3b">3.B</span>
+        <span class="skill-wt">MCQ: 20–25%</span>
+        <span class="skill-desc">Apply an appropriate law, definition, theoretical relationship, or model to make a claim</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">Which of the following best explains why <em>[phenomenon]</em> occurs?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>A student claims [X]. Is the student correct, and why?</li>
+          <li>Which of the following correctly describes [behavior/outcome]?</li>
+          <li>Which law or principle best supports the claim that [X]?</li>
+          <li>[Scenario]. Which of the following correctly predicts what happens next?</li>
+          <li>A student argues [argument]. Which statement identifies the flaw in the reasoning?</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Magnetism (force direction)</div>
+          <div class="ex-stem">A proton moves horizontally to the right through a region where the magnetic field points into the page. A student claims the proton will curve upward. Which of the following best supports this claim?</div>
+          <ul class="choices">
+            <li class="no">(A) The field lines converge above the proton, producing a net upward force.</li>
+            <li class="ok">(B) Applying F = qv × B with rightward v and inward B gives an upward force on the positive charge.</li>
+            <li class="no">(C) The proton is repelled by negative charges accumulating in the field region.</li>
+            <li class="no">(D) Moving upward minimizes the proton's potential energy in the magnetic field.</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (B) correctly applies the cross-product rule with the right-hand rule. (A) misapplies field line density. (C) fabricates charge accumulation. (D) uses an energy argument — magnetic forces do no work and create no potential energy.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Thermodynamics (kinetic model)</div>
+          <div class="ex-stem">An ideal gas in a rigid container is heated. A student claims the pressure increases. Which of the following best supports this claim using a microscopic model of the gas?</div>
+          <ul class="choices">
+            <li class="no">(A) Heating adds new molecules to the container, increasing collision frequency.</li>
+            <li class="no">(B) The gas expands when heated, pushing harder on the walls.</li>
+            <li class="ok">(C) The average kinetic energy of the molecules increases, so collisions with the walls occur with greater force and frequency.</li>
+            <li class="no">(D) Higher temperature causes the container walls to contract, reducing volume and raising pressure.</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (C) correctly invokes kinetic molecular theory. (A) violates conservation of mass. (B) contradicts "rigid container." (D) introduces fictional wall contraction — tempting because students may recall P and V are inversely related.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">Correct conclusion, wrong reasoning</span>State the right outcome but give a physically incorrect explanation. Highly effective and AP-authentic — it's the hardest distractor to eliminate.</li>
+          <li><span class="dist-name">Documented misconception</span>Use known student misconceptions: "current is used up," "gravity doesn't act in space," "magnetic fields do work," "a larger object falls faster."</li>
+          <li><span class="dist-name">Irrelevant principle</span>Invoke a real physics law that doesn't apply here. Students who half-remember the topic grab it.</li>
+          <li><span class="dist-name">Energy red herring</span>Offer an energy-based explanation for a force/field question where energy reasoning doesn't apply (e.g., magnetic force).</li>
+          <li><span class="dist-name">Violated constraint</span>Write a choice that ignores a stated constraint in the stem: rigid container, isolated system, battery disconnected.</li>
+          <li><span class="dist-name">Cause-effect reversal</span>Flip the causal direction: "pressure increases because volume decreases" in a situation where volume is fixed.</li>
+        </ul>
+        <div class="pitfall">All four answer choices must be grammatically parallel and similar in length. If the correct answer is noticeably longer or more detailed, students identify it by process of elimination rather than by physics reasoning.</div>
+      </td>
+    </tr>
+
+    <!-- 3.C -->
+    <tr>
+      <td>
+        <span class="badge b3c">3.C</span>
+        <span class="skill-wt">MCQ: 5–10%</span>
+        <span class="skill-desc">Justify or support a claim using evidence from experimental data, physical representations, or physical principles/laws</span>
+      </td>
+      <td>
+        <div class="cell-label">Core stem pattern</div>
+        <div class="stem-box">Which of the following [graphs / data / observations] best supports the claim that <em>[physics claim]</em>?</div>
+        <div class="cell-label">Variants</div>
+        <ul class="stem-variants">
+          <li>[Data table provided]. Which conclusion is best supported by this data?</li>
+          <li>Which graph would be expected if [claim] is true?</li>
+          <li>A student observes [result]. Which claim is best supported by this observation?</li>
+          <li>The data below is most consistent with which of the following models?</li>
+        </ul>
+      </td>
+      <td>
+        <div class="example">
+          <div class="ex-label">Ex 1 — Circuits (data stimulus)</div>
+          <div class="ex-stem">A student measures the current (I) through a resistor at several voltages (V) and records the data in the table below. [Table: V doubles each row, I doubles proportionally.] Which of the following claims is best supported by this data?</div>
+          <ul class="choices">
+            <li class="no">(A) The resistance of the resistor decreases as voltage increases.</li>
+            <li class="ok">(B) The resistor obeys Ohm's Law, with a constant resistance equal to the slope of a V-vs-I graph.</li>
+            <li class="no">(C) The current through the resistor is independent of the applied voltage.</li>
+            <li class="no">(D) The power dissipated by the resistor remains constant as voltage changes.</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (B) is best — linear V-I with constant slope means constant R. (A) contradicts constant slope. (C) directly contradicts the data. (D) is wrong because P = I²R — if I increases, P increases.</div>
+        </div>
+        <div class="example">
+          <div class="ex-label">Ex 2 — Physical optics (observation stimulus)</div>
+          <div class="ex-stem">A student shines monochromatic light through a single slit and observes a diffraction pattern on a distant screen. The slit width is then decreased. Which of the following observations best supports the claim that light exhibits wave behavior?</div>
+          <ul class="choices">
+            <li class="no">(A) The central bright fringe becomes narrower and more intense, consistent with light passing straight through.</li>
+            <li class="ok">(B) The central bright fringe becomes wider and the pattern spreads out, consistent with greater diffraction through a smaller aperture.</li>
+            <li class="no">(C) The pattern disappears when the slit is narrow enough, showing that light cannot pass through small openings.</li>
+            <li class="no">(D) The pattern shifts sideways, indicating refraction at the slit edge.</li>
+          </ul>
+          <div class="annotation"><strong>Why each fails:</strong> (B) explicitly links observation to the wave model. (A) describes particle behavior — beam narrows and concentrates. (C) is nonphysical. (D) conflates diffraction (wave spreading) with refraction (direction change at boundary).</div>
+        </div>
+      </td>
+      <td>
+        <div class="dist-label">Distractor strategies</div>
+        <ul class="dist-list">
+          <li><span class="dist-name">Contradicts the stimulus</span>Include a choice that directly contradicts what the data or graph shows — catches students who don't read carefully or who pattern-match on a keyword.</li>
+          <li><span class="dist-name">Overgeneralization</span>Offer a claim that goes beyond what the data can support — correlation stated as causation, or a pattern from limited trials stated as a universal law.</li>
+          <li><span class="dist-name">Partial evidence</span>A choice supported by some rows of the data table but not all. Students who read quickly accept it.</li>
+          <li><span class="dist-name">Axis misread</span>Offer a claim that would be true if the student swapped the axes (slope vs. y-intercept, linear vs. inverse).</li>
+          <li><span class="dist-name">Alternate model</span>Provide a claim consistent with a wrong physical model (particle vs. wave, classical vs. quantum) that the observation superficially fits.</li>
+          <li><span class="dist-name">Correct claim, wrong evidence</span>A choice that states a true physics principle but one that's not actually demonstrated by this particular data or observation.</li>
+        </ul>
+        <div class="pitfall">3.C questions require a stimulus — a data table, graph, diagram, or described observation. They cannot stand as plain-text questions. Design your stimulus first, then build distractors from common misreadings of it.</div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<div class="page-footer">
+  <div class="footer-note">
+    <strong>2026 administration clarifications (official, per College Board Oct 2025 document):</strong>
+    The clarifications are structural, not content changes. FRQ Sample Question #1 (Mathematical Routines): checkboxes replaced with bulleted lists for accessibility compatibility with the Bluebook testing app. FRQ Sample Question #3 (Experimental Design): parts A and B each split into (i) and (ii) sub-parts; part C streamlined for clearer scaffolding and scoring consistency. <em>No changes were made to science practice definitions, sub-skill descriptions, or MCQ exam weightings.</em> The College Board confirmed no further clarifications or corrections are forthcoming for the current CED.
+  </div>
+  <div class="checklist">
+    <strong>Pre-publish checklist</strong>
+    ☐ Exactly one sub-skill tested per question?<br>
+    ☐ Each wrong answer has a clear misconception behind it?<br>
+    ☐ All four choices are parallel in grammar and similar in length?<br>
+    ☐ (2.B) Are all choices the same order of magnitude?<br>
+    ☐ (2.C) Is exactly one constraint changing between setups?<br>
+    ☐ (2.D) Is only one variable changing in the stem?<br>
+    ☐ (3.C) Is a stimulus (graph/table/observation) attached?<br>
+    ☐ Units appear consistently across stem and all choices?
+  </div>
+</div>
+
+</body>
+</html>
