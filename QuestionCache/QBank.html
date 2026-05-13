@@ -267,6 +267,14 @@ body {
   font-size: 12px; font-weight: 500; font-family: var(--mono);
   background: var(--paper2); border: 1px solid var(--rule);
   color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.choice-letter:hover {
+  border-color: #aaa;
+  color: var(--ink);
+  border-radius:50%;
 }
 .choice-row input { flex: 1; }
 
@@ -284,11 +292,10 @@ body {
   transition: all 0.15s;
 }
 .correct-btn:hover { border-color: #aaa; color: var(--ink); }
-.correct-btn.sel-A { background: var(--c2a-bg); border-color: var(--c2a-mid); color: var(--c2a); }
-.correct-btn.sel-B { background: var(--c2b-bg); border-color: var(--c2b-mid); color: var(--c2b); }
-.correct-btn.sel-C { background: var(--c2c-bg); border-color: var(--c2c-mid); color: var(--c2c); }
-.correct-btn.sel-D { background: var(--c2d-bg); border-color: var(--c2d-mid); color: var(--c2d); }
-
+.sel-A { background: var(--c2a-bg) !important; border-color: var(--c2a-mid) !important; color: var(--c2a) !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
+.sel-B { background: var(--c2b-bg) !important; border-color: var(--c2b-mid) !important; color: var(--c2b) !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
+.sel-C { background: var(--c2c-bg) !important; border-color: var(--c2c-mid) !important; color: var(--c2c) !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
+.sel-D { background: var(--c2d-bg) !important; border-color: var(--c2d-mid) !important; color: var(--c2d) !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
 /* form actions */
 .form-actions {
   display: flex;
@@ -892,19 +899,10 @@ body {
         <div class="form-section">
           <div class="form-section-title">Answer choices</div>
           <div class="choices-grid" style="margin-bottom:14px;">
-            <div class="choice-row"><div class="choice-letter" id="cl-A">A</div><input id="f-A" type="text" placeholder="Choice A…"></div>
-            <div class="choice-row"><div class="choice-letter" id="cl-B">B</div><input id="f-B" type="text" placeholder="Choice B…"></div>
-            <div class="choice-row"><div class="choice-letter" id="cl-C">C</div><input id="f-C" type="text" placeholder="Choice C…"></div>
-            <div class="choice-row"><div class="choice-letter" id="cl-D">D</div><input id="f-D" type="text" placeholder="Choice D…"></div>
-          </div>
-          <div class="field">
-            <label>Correct answer</label>
-            <div class="correct-row">
-              <button class="correct-btn" id="cb-A" onclick="selectCorrect('A')">A</button>
-              <button class="correct-btn" id="cb-B" onclick="selectCorrect('B')">B</button>
-              <button class="correct-btn" id="cb-C" onclick="selectCorrect('C')">C</button>
-              <button class="correct-btn" id="cb-D" onclick="selectCorrect('D')">D</button>
-            </div>
+            <div class="choice-row"><div class="choice-letter" id="cb-A" onclick="selectCorrect('A')" title="Mark A as correct">A</div><input id="f-A" ...></div>
+            <div class="choice-row"><div class="choice-letter" id="cb-B" onclick="selectCorrect('B')" title="Mark B as correct">B</div><input id="f-B" ...></div>
+            <div class="choice-row"><div class="choice-letter" id="cb-C" onclick="selectCorrect('C')" title="Mark C as correct">C</div><input id="f-C" ...></div>
+            <div class="choice-row"><div class="choice-letter" id="cb-D" onclick="selectCorrect('D')" title="Mark D as correct">D</div><input id="f-D" ...></div>
           </div>
         </div>
 
@@ -1417,7 +1415,7 @@ function selectCorrect(l) {
   correctAnswer = l;
   ['A','B','C','D'].forEach(x => {
     const btn = document.getElementById('cb-'+x);
-    btn.className = 'correct-btn' + (x===l ? ' '+COLORS[l] : '');
+    btn.className = 'choice-letter' + (x===l ? ' sel-'+l : '');  
   });
 }
 
