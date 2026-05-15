@@ -1,7 +1,9 @@
-const STORAGE_KEY = 'apphys2_qbank_v1';
+const API_BASE = '/api';
 let questions = [];
 let editingId = null;
 let correctAnswer = '';
+let currentUser = null;
+let authToken = null;
 
 const SKILL_HINTS = {
   '2A': {
@@ -62,24 +64,27 @@ const SKILL_HINTS = {
 
 const LATEX_FIELDS = ['stem', 'A', 'B', 'C', 'D'];
 
-function loadFromStorage() {
+async function loadFromAPI() {
+  if (!authToken) return;
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      questions = JSON.parse(raw);
+    const response = await fetch(`${API_BASE}/questions`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (response.ok) {
+      questions = await response.json();
+    } else if (response.status === 401 || response.status === 403) {
+      logout();
+    } else {
+      console.error('Failed to load questions');
     }
   } catch (error) {
-    questions = [];
+    console.error('Error loading questions:', error);
   }
   updateSidebarCount();
 }
 
-function saveToStorage() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
-  } catch (error) {
-    // ignore storage write errors
-  }
+function saveToAPI() {
   updateSidebarCount();
 }
 
@@ -108,12 +113,8 @@ function showView(view) {
   const topTitle = document.querySelector(`#view-${view} .topbar-title`);
   if (topTitle) topTitle.textContent = titleMap[view] || '';
 
-  if (view === 'bank') {
-    renderBank();
-  }
-  if (view === 'track') {
-    renderTracker();
-  }
+  if (view === 'bank') renderBank();
+  if (view === 'track') renderTracker();
 }
 
 function updateSkillHint() {
@@ -233,7 +234,7 @@ function showSaveMsg(message) {
   window.setTimeout(() => messageElement.classList.remove('show'), 2000);
 }
 
-function saveQuestion() {
+async function saveQuestion() {
   const unit = document.getElementById('f-unit').value;
   const skill = document.getElementById('f-skill').value;
   const stem = document.getElementById('f-stem').value.trim();
@@ -250,8 +251,7 @@ function saveQuestion() {
     return;
   }
 
-  const question = {
-    id: editingId || Date.now().toString(),
+  const questionData = {
     unit,
     skill,
     stimulus,
@@ -262,32 +262,160 @@ function saveQuestion() {
     C,
     D,
     correct: correctAnswer,
-    notes,
-    date: editingId ? (questions.find(item => item.id === editingId) || {}).date || new Date().toISOString() : new Date().toISOString()
+    notes
   };
 
-  if (editingId) {
-    const index = questions.findIndex(item => item.id === editingId);
-    if (index >= 0) {
-      questions[index] = question;
+  try {
+    let response;
+    if (editingId) {
+      response = await fetch(`${API_BASE}/questions/${editingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify(questionData)
+      });
     } else {
-      questions.push(question);
+      response = await fetch(`${API_BASE}/questions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify(questionData)
+      });
     }
-  } else {
-    questions.push(question);
-  }
 
-  saveToStorage();
-  showSaveMsg(editingId ? 'Updated!' : 'Saved!');
-  clearForm();
-
-  if (document.getElementById('view-bank').classList.contains('active')) {
-    renderBank();
+    if (response.ok) {
+      const result = await response.json();
+      if (!editingId) {
+        questionData.id = result.id;
+        questionData.date = new Date().toISOString();
+        questions.push(questionData);
+      } else {
+        const index = questions.findIndex(item => item.id == editingId);
+        if (index >= 0) {
+          questions[index] = { ...questions[index], ...questionData };
+        }
+      }
+      saveToAPI();
+      showSaveMsg(editingId ? 'Updated!' : 'Saved!');
+      clearForm();
+      if (document.getElementById('view-bank').classList.contains('active')) {
+        renderBank();
+      }
+    } else {
+      const error = await response.json();
+      showSaveMsg(error.error || 'Error saving question');
+    }
+  } catch (error) {
+    showSaveMsg('Network error');
   }
 }
 
-function skillLabel(code) {
-  return `${code.slice(0, 1)}.${code.slice(1)}`;
+function setLocked(isLocked) {
+  document.body.classList.toggle('locked', isLocked);
+  const authButton = document.getElementById('auth-btn');
+  const userName = document.getElementById('user-name');
+
+  if (isLocked) {
+    authButton.textContent = 'Login';
+    userName.textContent = '';
+  } else {
+    authButton.textContent = 'Logout';
+    userName.textContent = currentUser ? currentUser.username : '';
+  }
+}
+
+function checkAuth() {
+  const token = localStorage.getItem('authToken');
+  const user = localStorage.getItem('currentUser');
+
+  if (token && user) {
+    authToken = token;
+    currentUser = JSON.parse(user);
+    updateUserUI();
+    loadFromAPI();
+    setLocked(false);
+  } else {
+    authToken = null;
+    currentUser = null;
+    updateUserUI();
+    setLocked(true);
+  }
+}
+
+function updateUserUI() {
+  const userName = document.getElementById('user-name');
+
+  if (currentUser) {
+    userName.textContent = currentUser.username;
+  } else {
+    userName.textContent = '';
+  }
+}
+
+async function login(username, password) {
+  try {
+    const response = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      authToken = data.token;
+      currentUser = data.user;
+      localStorage.setItem('authToken', authToken);
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      updateUserUI();
+      loadFromAPI();
+      setLocked(false);
+      closeLoginModal();
+    } else {
+      showLoginMsg(data.error || 'Login failed');
+    }
+  } catch (error) {
+    showLoginMsg('Network error');
+  }
+}
+
+function logout() {
+  authToken = null;
+  currentUser = null;
+  questions = [];
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('currentUser');
+  updateUserUI();
+  setLocked(true);
+}
+
+function showLoginMsg(message) {
+  const msgEl = document.getElementById('login-msg');
+  if (!msgEl) return;
+  msgEl.textContent = message;
+  msgEl.classList.add('show');
+  setTimeout(() => msgEl.classList.remove('show'), 3000);
+}
+
+function openLoginModal() {
+  const modal = document.getElementById('login-modal');
+  if (!modal) return;
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+  document.getElementById('login-username').focus();
+}
+
+function closeLoginModal() {
+  const modal = document.getElementById('login-modal');
+  if (!modal) return;
+  modal.classList.remove('visible');
+  modal.setAttribute('aria-hidden', 'true');
+  const msgEl = document.getElementById('login-msg');
+  if (msgEl) msgEl.classList.remove('show');
 }
 
 function renderBank() {
@@ -367,11 +495,25 @@ function editQ(id) {
   window.scrollTo(0, 0);
 }
 
-function deleteQ(id) {
+async function deleteQ(id) {
   if (!window.confirm('Delete this question?')) return;
-  questions = questions.filter(item => item.id !== id);
-  saveToStorage();
-  renderBank();
+
+  try {
+    const response = await fetch(`${API_BASE}/questions/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+
+    if (response.ok) {
+      questions = questions.filter(item => item.id != id);
+      saveToAPI();
+      renderBank();
+    } else {
+      alert('Error deleting question');
+    }
+  } catch (error) {
+    alert('Network error');
+  }
 }
 
 function renderTracker() {
@@ -513,11 +655,44 @@ function initEventListeners() {
 
   const bankList = document.getElementById('bank-list');
   if (bankList) bankList.addEventListener('click', handleBankActions);
+
+  // Auth event listeners
+  const authBtn = document.getElementById('auth-btn');
+  if (authBtn) authBtn.addEventListener('click', () => {
+    if (currentUser) {
+      logout();
+    } else {
+      openLoginModal();
+    }
+  });
+
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+  const loginSubmit = document.getElementById('login-submit');
+  if (loginSubmit) loginSubmit.addEventListener('click', () => {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    login(username, password);
+  });
+
+  const loginModalClose = document.getElementById('login-modal-close');
+  if (loginModalClose) loginModalClose.addEventListener('click', closeLoginModal);
+
+  const loginModalCancel = document.getElementById('login-modal-cancel');
+  if (loginModalCancel) loginModalCancel.addEventListener('click', closeLoginModal);
+
+  const loginModal = document.getElementById('login-modal');
+  if (loginModal) {
+    loginModal.addEventListener('click', (event) => {
+      if (event.target === loginModal) closeLoginModal();
+    });
+  }
 }
 
 function init() {
   initEventListeners();
-  loadFromStorage();
+  checkAuth();
 }
 
 window.addEventListener('DOMContentLoaded', init);

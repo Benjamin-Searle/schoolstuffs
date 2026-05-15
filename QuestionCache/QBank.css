@@ -73,6 +73,32 @@ body {
   letter-spacing: 0.5px;
 }
 
+.sidebar-user {
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-name {
+  font-weight: 500;
+  color: #faf7f0;
+  margin-bottom: 8px;
+}
+
+.btn-logout, .btn-login {
+  background: rgba(255,255,255,0.1);
+  color: #faf7f0;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-logout:hover, .btn-login:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 .sidebar-nav {
   padding: 16px 12px;
   flex: 1;
@@ -110,6 +136,87 @@ body {
   color: rgba(232,227,216,0.35);
 }
 .sidebar-count span { color: rgba(232,227,216,0.7); font-weight: 500; }
+
+.sidebar-footer {
+  padding: 16px 22px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+body.locked .main {
+  position: relative;
+  filter: saturate(0.4) brightness(0.9);
+  pointer-events: none;
+}
+
+body.locked .main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.74);
+  pointer-events: auto;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 25, 23, 0.64);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 1200;
+}
+
+.modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-panel {
+  width: min(480px, 92vw);
+  background: #fff;
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 28px 70px rgba(17, 23, 35, 0.18);
+  position: relative;
+}
+
+.modal-panel h2 {
+  margin-bottom: 18px;
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  color: var(--ink2);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modal .field {
+  margin-bottom: 14px;
+}
+
+.modal .field input {
+  width: 100%;
+}
+
+.login-msg {
+  font-size: 12px;
+  color: #b83a1a;
+  font-family: var(--mono);
+  margin-top: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.login-msg.show { opacity: 1; }
 
 /* ── MAIN CONTENT ── */
 .main {
@@ -376,6 +483,16 @@ body {
   transition: opacity 0.3s;
 }
 .save-msg.show { opacity: 1; }
+
+.login-msg {
+  font-size: 12px;
+  color: #b83a1a;
+  font-family: var(--mono);
+  margin-top: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.login-msg.show { opacity: 1; }
 
 .filter-bar {
   display: flex;
