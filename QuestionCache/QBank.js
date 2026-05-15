@@ -60,6 +60,8 @@ const SKILL_HINTS = {
   }
 };
 
+const LATEX_FIELDS = ['stem', 'A', 'B', 'C', 'D'];
+
 function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -130,6 +132,65 @@ function updateSkillHint() {
   hint.classList.add('visible');
 }
 
+function renderLatexFragment(text) {
+  const fragment = document.createDocumentFragment();
+  const regex = /\$\$([\s\S]+?)\$\$|\$([^\$\n]+?)\$/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+    }
+
+    const content = match[1] !== undefined ? match[1] : match[2];
+    const displayMode = match[1] !== undefined;
+    const span = document.createElement('span');
+
+    try {
+      katex.render(content, span, { throwOnError: false, displayMode });
+    } catch (error) {
+      span.textContent = match[0];
+    }
+
+    fragment.appendChild(span);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  return fragment;
+}
+
+function renderFieldMath(fieldKey) {
+  const input = document.getElementById(`f-${fieldKey}`);
+  const preview = document.getElementById(`p-${fieldKey}`);
+  if (!input || !preview) return;
+
+  const value = input.value || '';
+  const hasDollar = value.includes('$');
+
+  if (!hasDollar) {
+    preview.classList.remove('visible');
+    return;
+  }
+
+  preview.innerHTML = '';
+  preview.appendChild(renderLatexFragment(value));
+  preview.classList.add('visible');
+}
+
+function attachLatexEditor(fieldKey) {
+  const input = document.getElementById(`f-${fieldKey}`);
+  const preview = document.getElementById(`p-${fieldKey}`);
+  if (!input || !preview) return;
+
+  input.addEventListener('input', () => renderFieldMath(fieldKey));
+  renderFieldMath(fieldKey);
+}
+
 function selectCorrect(letter) {
   correctAnswer = letter;
   ['A', 'B', 'C', 'D'].forEach(option => {
@@ -160,6 +221,8 @@ function clearForm() {
 
   const skillHint = document.getElementById('skill-hint');
   if (skillHint) skillHint.classList.remove('visible');
+
+  LATEX_FIELDS.forEach(renderFieldMath);
 }
 
 function showSaveMsg(message) {
@@ -295,6 +358,7 @@ function editQ(id) {
   editingId = id;
   selectCorrect(question.correct);
   updateSkillHint();
+  LATEX_FIELDS.forEach(renderFieldMath);
 
   const editPill = document.getElementById('edit-pill');
   if (editPill) editPill.style.display = '';
@@ -436,6 +500,8 @@ function initEventListeners() {
 
   const exportButton = document.getElementById('export-btn');
   if (exportButton) exportButton.addEventListener('click', exportCSV);
+
+  LATEX_FIELDS.forEach(attachLatexEditor);
 
   ['fil-unit', 'fil-skill', 'fil-diff'].forEach(id => {
     const element = document.getElementById(id);

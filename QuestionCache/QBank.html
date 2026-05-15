@@ -6,6 +6,7 @@
 <title>AP Physics 2 — Question Bank</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <link rel="stylesheet" href="QBank.css">
 </head>
 <body>
@@ -109,17 +110,44 @@
         <div class="form-section">
           <div class="form-section-title">Question stem</div>
           <div class="field">
-            <textarea id="f-stem" placeholder="Write the full question stem here…" ></textarea>
+            <div class="latex-editor">
+              <textarea id="f-stem" placeholder="Write the full question stem here…"></textarea>
+              <div class="math-preview" id="p-stem"></div>
+            </div>
           </div>
         </div>
 
         <div class="form-section">
           <div class="form-section-title">Answer choices</div>
           <div class="choices-grid" style="margin-bottom:14px;">
-            <div class="choice-row"><div class="choice-letter" id="cb-A" data-choice="A" title="Mark A as correct">A</div><input id="f-A" ...></div>
-            <div class="choice-row"><div class="choice-letter" id="cb-B" data-choice="B" title="Mark B as correct">B</div><input id="f-B" ...></div>
-            <div class="choice-row"><div class="choice-letter" id="cb-C" data-choice="C" title="Mark C as correct">C</div><input id="f-C" ...></div>
-            <div class="choice-row"><div class="choice-letter" id="cb-D" data-choice="D" title="Mark D as correct">D</div><input id="f-D" ...></div>
+            <div class="choice-row">
+              <div class="choice-letter" id="cb-A" data-choice="A" title="Mark A as correct">A</div>
+              <div class="choice-wrap">
+                <textarea id="f-A" rows="1" placeholder="Choice A"></textarea>
+                <div class="math-preview" id="p-A"></div>
+              </div>
+            </div>
+            <div class="choice-row">
+              <div class="choice-letter" id="cb-B" data-choice="B" title="Mark B as correct">B</div>
+              <div class="choice-wrap">
+                <textarea id="f-B" rows="1" placeholder="Choice B"></textarea>
+                <div class="math-preview" id="p-B"></div>
+              </div>
+            </div>
+            <div class="choice-row">
+              <div class="choice-letter" id="cb-C" data-choice="C" title="Mark C as correct">C</div>
+              <div class="choice-wrap">
+                <textarea id="f-C" rows="1" placeholder="Choice C"></textarea>
+                <div class="math-preview" id="p-C"></div>
+              </div>
+            </div>
+            <div class="choice-row">
+              <div class="choice-letter" id="cb-D" data-choice="D" title="Mark D as correct">D</div>
+              <div class="choice-wrap">
+                <textarea id="f-D" rows="1" placeholder="Choice D"></textarea>
+                <div class="math-preview" id="p-D"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -541,6 +569,7 @@
   </div><!-- /main -->
 </div><!-- /shell -->
 
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="QBank.js"></script>
 </body>
 </html>

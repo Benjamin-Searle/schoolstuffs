@@ -2,13 +2,13 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --paper:    #f8f5ef;
-  --paper2:   #f0ece2;
+  --paper:    #F6F6F6;
+  --paper2:   #E8E8E8;
   --ink:      #1c1917;
   --ink2:     #44403c;
   --muted:    #78716c;
-  --rule:     #d6d0c4;
-  --rule2:    #e8e3d8;
+  --rule:     #D0D0D0;
+  --rule2:    #E0E0E0;
 
   --c2a:      #1e6fa8; --c2a-bg: #ddeef8; --c2a-mid: #7ab8de;
   --c2b:      #1a7a52; --c2b-bg: #d6f0e4; --c2b-mid: #6dc4a0;
@@ -41,7 +41,7 @@ body {
 .sidebar {
   width: 220px;
   flex-shrink: 0;
-  background: var(--ink);
+  background: #2C1320;
   color: #e8e3d8;
   display: flex;
   flex-direction: column;
@@ -207,7 +207,61 @@ body {
   box-shadow: 0 0 0 3px rgba(28,25,23,0.06);
   background: #fff;
 }
-.field textarea { resize: vertical; min-height: 72px; }
+.latex-editor textarea {
+  min-height: 72px;
+}
+
+.latex-editor,
+.choice-wrap {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+}
+
+.latex-editor textarea,
+.choice-wrap textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 11px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  caret-color: var(--ink);
+  resize: none;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.latex-editor textarea::placeholder,
+.choice-wrap textarea::placeholder {
+  color: rgba(28,25,23,0.45);
+}
+
+.math-preview {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-top: none;
+  border-radius: 0 0 7px 7px;
+  min-height: 34px;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+.math-preview.visible { display: flex; }
+
+.math-preview .katex { font-size: 1em; }
+
+.choice-row { display: flex; align-items: flex-start; gap: 7px; }
+.choice-wrap { flex: 1; display: flex; flex-direction: column; }
+.choice-row textarea { min-height: 42px; }
 
 .skill-hint {
   background: var(--paper2);
@@ -280,7 +334,7 @@ body {
   transition: all 0.15s;
 }
 .correct-btn:hover { border-color: #aaa; color: var(--ink); }
-.sel-ans { background: var(--c2a-bg) !important; border-color: var(--c2a-mid) !important; color: var(--c2a) !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
+.sel-ans { background: #466362 !important; border-color: #466362 !important; color: #fff !important; width: 26px !important; height: 26px !important; border-radius: 50% !important; }
 
 .form-actions {
   display: flex;
